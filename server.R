@@ -1,6 +1,7 @@
 library(shiny)
 library("rpart")
 library("caret")
+library("gbm")
 
 loadTheData <- function()
 {
@@ -22,19 +23,12 @@ loadTheData <- function()
   return(theData)
 }
 
-loadModel<-function()
-{
-    load("theModel")
-    return(fit);
-    
-}
-
 shinyServer(function(input, output) {
-  fit<-loadModel();
+  load("theModel")
   loadedData<-loadTheData();
 
   output$distPlot <- renderPlot({
-    partData<-theData[theData$ActivityCategory==input$activityCategory & theData$Status==1,]
+    partData<-loadedData[loadedData$ActivityCategory==input$activityCategory & loadedData$Status==1,]
     hist(as.numeric(partData$Activity),breaks=nlevels(factor(partData$Activity)),main=sprintf("Number of children registered by to category %s",input$activityCategory),xlab="Activity")
   })
   
