@@ -4,12 +4,9 @@ library("caret")
 
 loadTheData <- function()
 {
-  theData<-read.csv("FinalQuery.csv",stringsAsFactors=FALSE)
-  theData$RegistrationFee <- as.numeric(trimws(sub("\\₪","", theData$RegistrationFee)))
-  theData$Price <- as.numeric(trimws(sub("\\₪","", sub(",","",theData$Price))))
-  theData$Monthly <- as.numeric(trimws(sub("\\₪","", sub(",","",theData$Monthly))))
-  theData$OneTime <- as.numeric(trimws(sub("\\₪","", sub(",","",theData$OneTime))))
-  
+  print("loading")
+  theData<-read.csv("FinalQuery.csv",encoding="UTF-16LE")
+  print("done loading")
   theData$Status=factor(theData$Status)
   theData$Activity=factor(theData$Activity)
   theData$ActivityCategory=factor(theData$ActivityCategory)
@@ -21,7 +18,7 @@ loadTheData <- function()
   theData<-theData[,-c(4,10)]
   theDataToLearn<-theData[,-c(1:2)]
   theDataToLearn<-theDataToLearn[,-c(6)]
-  
+  print("done with loading function")
   return(theData)
 }
 
@@ -29,6 +26,7 @@ loadModel<-function()
 {
     load("theModel")
     return(fit);
+    
 }
 
 shinyServer(function(input, output) {
@@ -36,8 +34,8 @@ shinyServer(function(input, output) {
   loadedData<-loadTheData();
 
   output$distPlot <- renderPlot({
-    partData<-theData[theData$ActivityCategory==input$activityCategory,]
-    hist(as.numeric(partData$Activity),breaks=nlevels(partData$Activity),main=sprintf("Number of children registered by to category %s",input$activityCategory),xlab="Activity")
+    partData<-theData[theData$ActivityCategory==input$activityCategory & theData$Status==1,]
+    hist(as.numeric(partData$Activity),breaks=nlevels(factor(partData$Activity)),main=sprintf("Number of children registered by to category %s",input$activityCategory),xlab="Activity")
   })
   
   output$result <- renderText({

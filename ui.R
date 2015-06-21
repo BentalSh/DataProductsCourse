@@ -8,6 +8,7 @@ shinyUI(fluidPage(
   h6("This page tries to give information for the directors of a company that provides services for after school activities"),
   h6("The activities provided are numbered (from 1-50), and are categorized according to 3 categories (1-3)"),
   h6("To keep data about the company secret, we numerized all the data, and no names will be display(For example, no activity names will be displayed)"),
+  h6("Category 1 is not very interesting as it only contains 1 activity"),
   # Sidebar with a slider input for the number of bins
   sidebarLayout(
     
@@ -53,7 +54,7 @@ shinyUI(fluidPage(
       h3("Predict registration to category 2"),
       h6("Note that we appear to overfit the data where price is large"),
       h6("That is probably caused by the facts that the negatives (i.e. kids who didn't register to activities) are simulated data, as kids who didn't register mostly didn't even started the registration process"),
-      textOutput("result")
+      h1(textOutput("result"))
 
     )
   )
